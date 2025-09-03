@@ -1,0 +1,6 @@
+@MaterialsApp_HostAddress = http://localhost:5194
+
+GET {{MaterialsApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

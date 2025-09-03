@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Materials List</title>
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/12.0.0/default/default-main.css">
+  <style>
+    body { font-family: system-ui, Segoe UI, Roboto, Arial; margin: 24px; }
+    #grid { margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h2>Materials</h2>
+  <p><a href="/index.html">&larr; Home</a> • <a href="/pages/create.html">Add New</a></p>
+
+  <div id="grid"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2025.3.825/js/kendo.all.min.js"></script>
+  <script>
+    $("#grid").kendoGrid({
+      dataSource: {
+        transport: { read: { url: "/api/materials", dataType: "json" } },
+        pageSize: 10,
+        schema: { model: { id: "materialId" } }
+      },
+      height: 600,
+      sortable: true,
+      filterable: { mode: "row" },
+      pageable: true,
+      selectable: "row",
+      navigatable: true,
+      toolbar: ["search"],
+      columns: [
+        { field: "name", title: "Name" },
+        { field: "category", title: "Category" },
+        { field: "brand", title: "Brand" },
+        { field: "unitPrice", title: "Unit Price", format: "{0:c2}", width: 120 },
+        { field: "unitOfMeasure", title: "U/M", width: 90 },
+        { field: "inStockQty", title: "In Stock", width: 100 },
+        { field: "reorderLevel", title: "Reorder", width: 100 },
+        { field: "gstPercent", title: "GST %", format: "{0:n2}", width: 100 },
+        { field: "isActive", title: "Active", template: "#= isActive ? 'Yes' : 'No' #", width: 90 },
+        { field: "addedOn", title: "Added On", format: "{0:yyyy-MM-dd}", width: 130 }
+      ],
+      change: function () {
+        const dataItem = this.dataItem(this.select());
+        if (dataItem) location.href = "/pages/details.html?id=" + dataItem.materialId;
+      }
+    });
+  </script>
+</body>
+</html>

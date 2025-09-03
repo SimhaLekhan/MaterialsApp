@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Material Details</title>
+  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/12.0.0/default/default-main.css">
+  <style>
+    body { font-family: system-ui, Segoe UI, Roboto, Arial; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 720px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+    .lbl { font-weight: 600; color: #333; }
+  </style>
+</head>
+<body>
+  <h2>Material Details</h2>
+  <p><a href="/pages/list.html">&larr; Back to list</a></p>
+
+  <div class="card" id="view"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://kendo.cdn.telerik.com/2025.3.825/js/kendo.all.min.js"></script>
+  <script id="tpl" type="text/x-kendo-template">
+    <div class="row"><div class="lbl">Name</div><div>#= name #</div></div>
+    <div class="row"><div class="lbl">Category</div><div>#= category #</div></div>
+    <div class="row"><div class="lbl">Brand</div><div>#= brand || '-' #</div></div>
+    <div class="row"><div class="lbl">Unit Price</div><div>#= kendo.toString(unitPrice, "c2") #</div></div>
+    <div class="row"><div class="lbl">U/M</div><div>#= unitOfMeasure #</div></div>
+    <div class="row"><div class="lbl">In Stock</div><div>#= inStockQty #</div></div>
+    <div class="row"><div class="lbl">Reorder Level</div><div>#= reorderLevel #</div></div>
+    <div class="row"><div class="lbl">GST %</div><div>#= kendo.toString(gstPercent, "n2") #</div></div>
+    <div class="row"><div class="lbl">Active</div><div>#= isActive ? "Yes" : "No" #</div></div>
+    <div class="row"><div class="lbl">Added On</div><div>#= kendo.toString(addedOn, "yyyy-MM-dd") #</div></div>
+  </script>
+
+  <script>
+    const id = new URLSearchParams(location.search).get("id");
+    if (!id) { document.getElementById("view").innerHTML = "Invalid id"; }
+    else {
+      $.getJSON("/api/materials/" + id)
+        .done(function(data){
+          // Ensure date parses for template formatting
+          data.addedOn = kendo.parseDate(data.addedOn);
+          const html = kendo.template($("#tpl").html())(data);
+          $("#view").html(html);
+        })
+        .fail(() => $("#view").html("Not found"));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Ignore build outputs
+bin/
+obj/
+.vs/
+*.user
+*.db
+
+# Ignore secrets (don’t push sensitive files)
+appsettings.Development.json

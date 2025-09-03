@@ -1,0 +1,44 @@
+MaterialsApp - Short Note
+
+Author: Lekhan P Simha
+Project: MaterialsApp (ASP.NET Core 9 + EF Core + Kendo UI for jQuery)
+Path: D:\Task2\MaterialsApp
+
+1) Setup steps (how to prepare dev machine)
+- Install .NET 9 SDK: https://dotnet.microsoft.com/download/dotnet/9.0
+- Install SQL Server LocalDB or SQL Server Express (SSMS optional).
+- (Optional) Install Kendo UI for jQuery if you prefer local assets; CDN is used in this project.
+- From project folder:
+    dotnet restore
+    dotnet build
+- Ensure connection string in appsettings.json is valid:
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=MaterialsDb;Trusted_Connection=True;TrustServerCertificate=True"
+
+2) How to generate DB & run
+- Create / apply migrations:
+    dotnet ef migrations add InitialCreate       # only if migrations folder not present
+    dotnet ef database update
+  OR run SQL script (migrations.sql) in SSMS to create schema.
+- Run the app:
+    dotnet run
+  Open browser: https://localhost:<PORT>/pages/create.html
+
+3) How to run the app from scratch (clean machine)
+- Install .NET 9 and SQL Server LocalDB.
+- Restore & build the project.
+- Update appsettings.json if you need a different server (e.g. .\SQLEXPRESS).
+- Run `dotnet ef database update` or run `migrations.sql` in SSMS.
+- Run `dotnet run`, then open listed pages.
+
+4) Deliverables included
+- Project source (Controllers, Models, Data, wwwroot, Program.cs, appsettings.json)
+- migrations.sql (EF Core generated, idempotent)
+- docs/screenshots/create.png
+- docs/screenshots/list.png
+- docs/screenshots/details.png
+
+5) Notes, caveats & tips
+- Do not include `bin/` or `obj/` in the zip.
+- If the reviewer can't run migrations, they can run the included `migrations.sql`.
+- If using SQL Server Express, change connection string to:
+    "Server=.\\SQLEXPRESS;Database=MaterialsDb;Trusted_Connection=True;TrustServerCertificate=True"
