@@ -6,9 +6,11 @@
   <link rel="stylesheet" href="https://kendo.cdn.telerik.com/themes/12.0.0/default/default-main.css">
   <style>
     body { font-family: system-ui, Segoe UI, Roboto, Arial; margin: 24px; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 720px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 720px; margin-bottom: 20px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
     .lbl { font-weight: 600; color: #333; }
+    .actions { margin-top: 15px; }
+    button { margin-right: 8px; }
   </style>
 </head>
 <body>
@@ -17,8 +19,14 @@
 
   <div class="card" id="view"></div>
 
+  <div class="actions">
+    <button id="btnEdit" class="k-button k-primary">Edit</button>
+    <button id="btnDelete" class="k-button k-danger">Delete</button>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://kendo.cdn.telerik.com/2025.3.825/js/kendo.all.min.js"></script>
+  
   <script id="tpl" type="text/x-kendo-template">
     <div class="row"><div class="lbl">Name</div><div>#= name #</div></div>
     <div class="row"><div class="lbl">Category</div><div>#= category #</div></div>
@@ -34,17 +42,40 @@
 
   <script>
     const id = new URLSearchParams(location.search).get("id");
-    if (!id) { document.getElementById("view").innerHTML = "Invalid id"; }
-    else {
+    let materialData = null;
+
+    if (!id) {
+      document.getElementById("view").innerHTML = "Invalid id";
+    } else {
       $.getJSON("/api/materials/" + id)
         .done(function(data){
-          // Ensure date parses for template formatting
           data.addedOn = kendo.parseDate(data.addedOn);
+          materialData = data;
           const html = kendo.template($("#tpl").html())(data);
           $("#view").html(html);
         })
         .fail(() => $("#view").html("Not found"));
     }
+
+    // Edit button → redirect to edit page
+    $("#btnEdit").on("click", function(){
+      if (id) location.href = "/pages/edit.html?id=" + id;
+    });
+
+    // Delete button → confirm & call API
+    $("#btnDelete").on("click", function(){
+      if (confirm("Are you sure you want to delete this material?")) {
+        $.ajax({
+          url: "/api/materials/" + id,
+          type: "DELETE"
+        })
+        .done(() => {
+          alert("Deleted successfully");
+          location.href = "/pages/list.html";
+        })
+        .fail(() => alert("Delete failed"));
+      }
+    });
   </script>
 </body>
 </html>

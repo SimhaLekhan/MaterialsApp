@@ -10,6 +10,9 @@ namespace MaterialsApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Material>()
+                .HasIndex(m => m.Name)
+                .IsUnique();
+            modelBuilder.Entity<Material>()
                 .Property(m => m.AddedOn)
                 .HasDefaultValueSql("GETUTCDATE()");
         }
